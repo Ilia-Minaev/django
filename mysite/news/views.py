@@ -5,7 +5,7 @@ from .models import News
 
 
 def index(request):
-    news = News.objects.all()
+    news = News.objects.order_by('-created_at')
     # res = '<h1>Список новостей</h1>'
     # for item in news:
     #    res += f'<div><p>{item.title}</p></div>'
