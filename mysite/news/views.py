@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .models import News
 # Create your views here.
 
 
 def index(request):
-    # print(request)
-    return HttpResponse('Hello')
-
-
-def test(request):
-    # print(request)
-    return HttpResponse('<h1>test</h1>')
+    news = News.objects.all()
+    # res = '<h1>Список новостей</h1>'
+    # for item in news:
+    #    res += f'<div><p>{item.title}</p></div>'
+    #    res += f'<div><p>{item.content}</p></div>'
+    #    res += f'<hr>'
+    # return HttpResponse(res)
+    return render(request, 'news/index.html', {'news': news, 'title': 'Список новостей'})
