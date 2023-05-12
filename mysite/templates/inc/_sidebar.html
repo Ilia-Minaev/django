@@ -2,7 +2,7 @@
 <div class="list-group">
     {% get_list_categories as categories %}
     {% for item in categories %}
-    <a href="{% url 'category' item.pk %}" class="list-group-item list-group-item-action">
+    <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action">
         {{ item.title }}
     </a>
     {% endfor %}
@@ -10,4 +10,6 @@
 
 <br>
 
-{% show_categories %}
+{% comment 'dont need' %}
+{% show_categories arg1='dfdsfjdskf' arg2='454545' %}
+{% endcomment %}

@@ -18,12 +18,14 @@
 {% for item in news %}
 <div class="card mb-3">
     <div class="card-header">
-        {{ forloop.counter }}. Категория: <span style="color: brown;">
-            {{ item.category|capfirst }}</span>
+        {{ forloop.counter }}. Категория:
+        <a href="{{ item.category.get_absolute_url }}">
+            {{ item.category|capfirst }}
+        </a>
     </div>
     <div class="card-body">
         <div class="d-flex">
-            <div class="">
+            <div class="me-3">
                 {% if item.photo %}
                 <img src="{{ item.photo.url }}" alt="{{ item.photo.name }}" width="350" class="mr-3">
                 {% else %}
@@ -38,7 +40,7 @@
                     {{ item.content|safe|linebreaks|truncatewords:40 }}
                 </div>
                 {% endautoescape %}
-                <a href="#" class="btn btn-primary">Read more...</a>
+                <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Read more...</a>
             </div>
         </div>
     </div>

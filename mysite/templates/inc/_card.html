@@ -1,0 +1,32 @@
+<div class="card mb-3">
+    <div class="card-header">
+        {{ forloop.counter }}. Категория:
+        <a href="{% url 'category' item.category.pk %}">
+            {{ item.category|capfirst }}
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="d-flex">
+            <div class="me-3">
+                {% if item.photo %}
+                <img src="{{ item.photo.url }}" alt="{{ item.photo.name }}" width="350" class="mr-3">
+                {% else %}
+                <img src="/media/photos/no-photo.jpg" alt="Фотки нет" width="350" class="mr-3">
+                {% endif %}
+            </div>
+            <div class="">
+                <h5 class="card-title {% cycle 'text-danger' 'text-success' %}">{{ item.title }}
+                </h5>
+                {% autoescape off %}
+                <div class="card-text">
+                    {{ item.content|safe|linebreaks|truncatewords:40 }}
+                </div>
+                {% endautoescape %}
+                <a href="{{ item.get_absolute_url }}" class="btn btn-primary">Read more...</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-body-secondary">
+        {{ item.created_at|date:"Y-m-d H:i:s" }}
+    </div>
+</div>

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }} :: {{ block.super }}
+{% endblock %}
+
+<div class="mb-3">
+    <h1>{{ title }}</h1>
+    <span>(Всего {{ news.count }} новости(ей))</span>
+</div>
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-header">
+        {{ forloop.counter }}. Категория:
+        <a href="{{ news_item.category.get_absolute_url }}">
+            {{ news_item.category|capfirst }}
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="d-flex">
+            <div class="me-3">
+                {% if news_item.photo %}
+                <img src="{{ news_item.photo.url }}" alt="{{ news_item.photo.name }}" width="350" class="mr-3">
+                {% else %}
+                <img src="/media/photos/no-photo.jpg" alt="Фотки нет" width="350" class="mr-3">
+                {% endif %}
+            </div>
+            <div class="">
+                <h5 class="card-title {% cycle 'text-danger' 'text-success' %}">{{ item.title }}
+                </h5>
+                {% autoescape off %}
+                <div class="card-text">
+                    {{ news_item.content|safe|linebreaks }}
+                </div>
+                {% endautoescape %}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-body-secondary">
+        {{ news_item.created_at|date:"Y-m-d H:i:s" }}
+    </div>
+</div>
+{% endblock %}
