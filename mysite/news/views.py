@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import News, Category
+from .forms import NewsForm
 # Create your views here.
 
 
@@ -40,3 +41,17 @@ def view_news(request, news_id):
         'news_item': news_item,
     }
     return render(request, template_name='news/view_news.html', context=context)
+
+
+def add_news(request):
+    form = ''
+    if (request.method == 'POST'):
+        form = NewsForm()
+    else:
+        form = NewsForm()
+    context = {
+        'title': 'Добавление новости',
+        'h1': 'Добавление новости',
+        'form': form,
+    }
+    return render(request, template_name='news/add_news.html', context=context)
