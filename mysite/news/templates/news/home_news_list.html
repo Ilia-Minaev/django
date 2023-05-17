@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }} :: {{ block.super }}
+{% endblock %}
+
+<div class="mb-3">
+    <h1>{{ title }}</h1>
+    <span>(Всего {{ news.count }} новости(ей))</span>
+</div>
+
+{% block sidebar %}
+{% include 'inc/_sidebar.html' %}
+{% endblock %}
+
+
+{% block content %}
+{% for item in news %}
+{% include 'inc/_card.html' %}
+{% empty %}
+<h2>Новостей нет</h2>
+{% endfor %}
+{% endblock %}

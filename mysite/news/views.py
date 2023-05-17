@@ -1,7 +1,26 @@
+from typing import Any, Dict
+from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.generic import ListView
+
 from .models import News, Category
 from .forms import NewsForm
-# Create your views here.
+
+
+class HomeNews(ListView):
+    model = News
+    template_name = 'news/home_news_list.html'
+    context_object_name = 'news'
+    # extra_context = {'title': 'Главная', }
+
+    def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Главная страница'
+        return context
+
+    def get_queryset(self) -> QuerySet[Any]:
+        # return News.objects.filter(id_published=True)
+        return super().get_queryset().filter(id_published=True)
 
 
 def index(request):
@@ -49,7 +68,8 @@ def add_news(request):
         form = NewsForm(request.POST)
         if form.is_valid():
             # print(form.cleaned_data)
-            news = News.objects.create(**form.cleaned_data)
+            # news = News.objects.create(**form.cleaned_data)
+            news = form.save()
             return redirect(news)
     else:
         form = NewsForm()

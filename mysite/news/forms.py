@@ -1,7 +1,10 @@
 from django import forms
-from .models import Category
+# from .models import Category
+from .models import News
+from django.core.exceptions import ValidationError
+import re
 
-
+"""
 class NewsForm(forms.Form):
     title = forms.CharField(
         max_length=150,
@@ -20,3 +23,24 @@ class NewsForm(forms.Form):
         label='Категория',
         empty_label='Выберете категорию',
         widget=forms.Select(attrs={'class': 'form-control'}))
+"""
+
+
+class NewsForm(forms.ModelForm):
+    class Meta:
+        model = News
+        # fields = '__all__'
+        fields = ['title', 'content', 'id_published', 'category']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'id_published': forms.TextInput(attrs={'class': 'form-check-input', 'type': 'checkbox', 'checked': True, 'required': None}),
+            'category': forms.Select(attrs={'class': 'form-control'}),
+        }
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if re.match(r'\d', title):
+            text = 'Название не должно называться с цыфры'
+            raise ValidationError(text)
+        return title
