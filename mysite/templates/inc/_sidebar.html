@@ -3,7 +3,7 @@
     {% get_list_categories as categories %}
     {% for item in categories %}
     <a href="{{ item.get_absolute_url }}" class="list-group-item list-group-item-action">
-        {{ item.title }}
+        {{ item.title }} <span class="badge bg-secondary">{{ item.cnt }}</span>
     </a>
     {% endfor %}
 </div>

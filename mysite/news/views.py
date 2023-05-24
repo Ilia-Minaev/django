@@ -21,8 +21,8 @@ class HomeNews(ListView):
         return context
 
     def get_queryset(self) -> QuerySet[Any]:
-        # return News.objects.filter(id_published=True)
-        return super().get_queryset().filter(id_published=True)
+        # return News.objects.filter(is_published=True)
+        return super().get_queryset().filter(is_published=True)
 
 
 """
@@ -56,8 +56,8 @@ class NewsByCategory(ListView):
         return context
 
     def get_queryset(self) -> QuerySet[Any]:
-        # return News.objects.filter(id_published=True)
-        return super().get_queryset().filter(category_id=self.kwargs['category_id'], id_published=True)
+        # return News.objects.filter(is_published=True)
+        return super().get_queryset().filter(category_id=self.kwargs['category_id'], is_published=True)
 
 
 """
@@ -86,8 +86,8 @@ class ViewNews(DetailView):
         return context
 
     def get_queryset(self) -> QuerySet[Any]:
-        # return News.objects.filter(id_published=True)
-        return super().get_queryset().filter(id_published=True)
+        # return News.objects.filter(is_published=True)
+        return super().get_queryset().filter(is_published=True)
 
 
 """

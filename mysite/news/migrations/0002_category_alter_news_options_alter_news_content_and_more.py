@@ -14,8 +14,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(db_index=True, max_length=150, verbose_name='Наименование категории')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('title', models.CharField(db_index=True, max_length=150,
+                 verbose_name='Наименование категории')),
             ],
             options={
                 'verbose_name': 'Категория',
@@ -25,7 +27,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='news',
-            options={'ordering': ['-created_at'], 'verbose_name': 'Новость', 'verbose_name_plural': 'Новости'},
+            options={'ordering': [
+                '-created_at'], 'verbose_name': 'Новость', 'verbose_name_plural': 'Новости'},
         ),
         migrations.AlterField(
             model_name='news',
@@ -35,31 +38,37 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='news',
             name='created_at',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='Дата создания'),
+            field=models.DateTimeField(
+                auto_now_add=True, verbose_name='Дата создания'),
         ),
         migrations.AlterField(
             model_name='news',
-            name='id_published',
-            field=models.BooleanField(default=True, verbose_name='Опубликовано'),
+            name='is_published',
+            field=models.BooleanField(
+                default=True, verbose_name='Опубликовано'),
         ),
         migrations.AlterField(
             model_name='news',
             name='photo',
-            field=models.ImageField(blank=True, upload_to='photos/%Y/%m/%d/', verbose_name='Картинка'),
+            field=models.ImageField(
+                blank=True, upload_to='photos/%Y/%m/%d/', verbose_name='Картинка'),
         ),
         migrations.AlterField(
             model_name='news',
             name='title',
-            field=models.CharField(max_length=150, verbose_name='Наименование'),
+            field=models.CharField(
+                max_length=150, verbose_name='Наименование'),
         ),
         migrations.AlterField(
             model_name='news',
             name='updated_at',
-            field=models.DateTimeField(auto_now=True, verbose_name='Дата последнего обновления'),
+            field=models.DateTimeField(
+                auto_now=True, verbose_name='Дата последнего обновления'),
         ),
         migrations.AddField(
             model_name='news',
             name='category',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='news.category'),
+            field=models.ForeignKey(
+                null=True, on_delete=django.db.models.deletion.PROTECT, to='news.category'),
         ),
     ]

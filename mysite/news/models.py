@@ -1,8 +1,6 @@
 from django.db import models
 from django.urls import reverse
 
-# Create your models here.
-
 DB = {
     'id': 'id',
     'title': 'title',
@@ -10,7 +8,7 @@ DB = {
     'created': 'created_at',
     'updated': 'updated_at',
     'photo': 'photo',
-    'published': 'id_published',
+    'published': 'is_published',
 }
 
 
@@ -31,13 +29,14 @@ class News(models.Model):
         upload_to='photos/%Y/%m/%d/',
         verbose_name='Картинка',
         blank=True)
-    id_published = models.BooleanField(
+    is_published = models.BooleanField(
         default=True,
         verbose_name='Опубликовано')
     category = models.ForeignKey(
         'Category',
         verbose_name='Категория',
         on_delete=models.PROTECT,)
+    views = models.IntegerField(default=0)
 
     def get_absolute_url(self):
         return reverse('view_news', kwargs={'pk': self.pk})

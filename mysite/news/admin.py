@@ -6,11 +6,11 @@ from .models import News, Category
 
 class NewsAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'created_at',
-                    'updated_at', 'id_published', 'category')
+                    'updated_at', 'is_published', 'category')
     list_display_links = ('title',)
     search_fields = ('title', 'content')
-    list_editable = ('id_published', )
-    list_filter = ('id_published', 'category')
+    list_editable = ('is_published', )
+    list_filter = ('is_published', 'category')
 
 
 class CategoryAdmin(admin.ModelAdmin):
