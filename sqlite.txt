@@ -1,3 +1,4 @@
 django.fun
+pypi.org/
 
 python manage.py shell

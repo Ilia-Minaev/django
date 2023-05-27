@@ -1,28 +1,48 @@
-from typing import Any, Dict
+
 from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
-from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.urls import reverse_lazy
 
+from typing import Any, Dict
 from .models import News, Category
 from .forms import NewsForm
+from .utils import MyMixin
 
 
-class HomeNews(ListView):
+def test(request):
+    objects = ['john', 'mark', 'kate', 'robert',
+               'paul', 'ringo', 'django freeman', 'iezecul', '1111 ']
+    from django.core.paginator import Paginator
+    paginator = Paginator(objects, 2)
+    page_num = request.GET.get('page', 1)
+    page_objects = paginator.get_page(page_num)
+    context = {
+        'title': 'Тестовая страница',
+        'page_obj': page_objects
+    }
+    return render(request, 'news/test.html', context)
+
+
+class HomeNews(MyMixin, ListView):
     model = News
     template_name = 'news/home_news_list.html'
     context_object_name = 'news'
     # extra_context = {'title': 'Главная', }
     allow_empty = True
+    mixin_prop = 'hello world'
+    paginate_by = MyMixin.pagination_num
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['title'] = 'Главная страница'
+        context['mixin_prop'] = self.get_prop()
         return context
 
     def get_queryset(self) -> QuerySet[Any]:
         # return News.objects.filter(is_published=True)
-        return super().get_queryset().filter(is_published=True)
+        return super().get_queryset().filter(is_published=True).select_related('category')
 
 
 """
@@ -44,20 +64,23 @@ def index(request):
 """
 
 
-class NewsByCategory(ListView):
+class NewsByCategory(MyMixin, ListView):
     model = News
     template_name = 'news/home_news_list.html'
     context_object_name = 'news'
     allow_empty = False
+    paginate_by = MyMixin.pagination_num
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
+        title = Category.objects.get(pk=self.kwargs['category_id'])
+        title = self.get_upper(title)
         context = super().get_context_data(**kwargs)
-        context['title'] = Category.objects.get(pk=self.kwargs['category_id'])
+        context['title'] = title
         return context
 
     def get_queryset(self) -> QuerySet[Any]:
         # return News.objects.filter(is_published=True)
-        return super().get_queryset().filter(category_id=self.kwargs['category_id'], is_published=True)
+        return super().get_queryset().filter(category_id=self.kwargs['category_id'], is_published=True).select_related('category')
 
 
 """
@@ -102,10 +125,11 @@ def view_news(request, news_id):
 """
 
 
-class CreateNews(CreateView):
+class CreateNews(LoginRequiredMixin, CreateView):
     form_class = NewsForm
     template_name = 'news/add_news.html'
     # success_url = reverse_lazy('home')
+    login_url = '/admin/'
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
