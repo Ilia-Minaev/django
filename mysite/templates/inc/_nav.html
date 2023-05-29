@@ -29,10 +29,12 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link disabled">{% now "Y-m-d H:i:s" %}</a>
-                </li>
             </ul>
+            <span class="navbar-text me-5">
+                <a href="{% url 'register' %}">Register</a>
+                <span> | </span>
+                <a href="{% url 'login' %}">Login</a>
+            </span>
         </div>
     </div>
 </nav>

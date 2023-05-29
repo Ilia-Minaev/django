@@ -4,11 +4,45 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.urls import reverse_lazy
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 from typing import Any, Dict
 from .models import News, Category
 from .forms import NewsForm
 from .utils import MyMixin
+
+
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request=request,
+                message='Вы успешно зарегистрировались')
+            return redirect('login')
+        else:
+            messages.error(
+                request=request,
+                message='Ошибка регистрации')
+    else:
+        form = UserCreationForm()
+
+    context = {
+        'title': 'Регистрация',
+        'h1': 'Регистрация',
+        'form': form,
+    }
+    return render(request=request, template_name='news/register.html', context=context)
+
+
+def login(request):
+    context = {
+        'title': 'Вход',
+        'h1': 'Вход',
+    }
+    return render(request=request, template_name='news/login.html', context=context)
 
 
 def test(request):
