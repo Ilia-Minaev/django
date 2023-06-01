@@ -2,7 +2,50 @@ from django import forms
 # from .models import Category
 from .models import News
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
 import re
+
+class UserLoginForm(AuthenticationForm):
+    class_attr = {'class': 'form-control'}
+    class_attr_af = {**class_attr, **{'autofocus': ''}}
+    username = forms.CharField(
+        label='Имя пользователя',
+        help_text='максимум 150 символов',
+        widget=forms.TextInput(attrs=class_attr_af))
+    password = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput(attrs=class_attr))
+
+class UserRegisterForm(UserCreationForm):
+    class_attr = {'class': 'form-control'}
+    class_attr_af = {**class_attr, **{'autofocus': ''}}
+    username = forms.CharField(
+        label='Имя пользователя',
+        help_text='максимум 150 символов',
+        widget=forms.TextInput(attrs=class_attr_af))
+    password1 = forms.CharField(
+        label='Пароль',
+        widget=forms.PasswordInput(attrs=class_attr))
+    password2 = forms.CharField(
+        label='Подтверждение пароля',
+        widget=forms.PasswordInput(attrs=class_attr))
+    email = forms.EmailField(
+        label='E-mail',
+        widget=forms.EmailInput(attrs=class_attr))
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+        """
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'password1': forms.TextInput(attrs={'class': 'form-control'}),
+            'password2': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+        """
+
 
 """
 class NewsForm(forms.Form):

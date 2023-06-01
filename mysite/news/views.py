@@ -3,31 +3,33 @@ from django.db.models.query import QuerySet
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.urls import reverse_lazy
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout
 from django.contrib import messages
+# from django.urls import reverse_lazy
+# from django.contrib.auth.forms import UserCreationForm
 
 from typing import Any, Dict
 from .models import News, Category
-from .forms import NewsForm
+from .forms import NewsForm, UserRegisterForm, UserLoginForm
 from .utils import MyMixin
 
 
 def register(request):
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            login(request, user)
             messages.success(
                 request=request,
                 message='Вы успешно зарегистрировались')
-            return redirect('login')
+            return redirect('home')
         else:
             messages.error(
                 request=request,
                 message='Ошибка регистрации')
     else:
-        form = UserCreationForm()
+        form = UserRegisterForm()
 
     context = {
         'title': 'Регистрация',
@@ -37,12 +39,26 @@ def register(request):
     return render(request=request, template_name='news/register.html', context=context)
 
 
-def login(request):
+def user_login(request):
+    if request.method == 'POST':
+        form = UserLoginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = UserLoginForm()
     context = {
         'title': 'Вход',
         'h1': 'Вход',
+        'form': form,
     }
     return render(request=request, template_name='news/login.html', context=context)
+
+
+def user_logout(request):
+    logout(request)
+    return redirect('login')
 
 
 def test(request):
