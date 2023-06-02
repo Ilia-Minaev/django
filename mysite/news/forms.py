@@ -6,6 +6,15 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 import re
 
+class ContactForm(forms.Form):
+    class_attr = {'class': 'form-control'}
+    subject = forms.CharField(
+        label='Тема',
+        widget=forms.TextInput(attrs=class_attr))
+    content = forms.CharField(
+        label='Текст',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+
 class UserLoginForm(AuthenticationForm):
     class_attr = {'class': 'form-control'}
     class_attr_af = {**class_attr, **{'autofocus': ''}}

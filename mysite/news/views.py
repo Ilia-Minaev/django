@@ -5,12 +5,13 @@ from django.views.generic import ListView, DetailView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.core.mail import send_mail
 # from django.urls import reverse_lazy
 # from django.contrib.auth.forms import UserCreationForm
 
 from typing import Any, Dict
 from .models import News, Category
-from .forms import NewsForm, UserRegisterForm, UserLoginForm
+from .forms import NewsForm, UserRegisterForm, UserLoginForm, ContactForm
 from .utils import MyMixin
 
 
@@ -62,17 +63,36 @@ def user_logout(request):
 
 
 def test(request):
-    objects = ['john', 'mark', 'kate', 'robert',
-               'paul', 'ringo', 'django freeman', 'iezecul', '1111 ']
-    from django.core.paginator import Paginator
-    paginator = Paginator(objects, 2)
-    page_num = request.GET.get('page', 1)
-    page_objects = paginator.get_page(page_num)
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            mail = send_mail(form.cleaned_data['subject'],
+                             form.changed_data['content'],
+                             'admin@admin.ru',
+                             ['test@test.ru'],
+                             fail_silently=False)
+            if mail:
+                messages.success(
+                    request=request,
+                    message='Письмо отправлено')
+                return redirect('test')
+            else:
+                messages.error(
+                    request=request,
+                    message='Ошибка отправки')
+        else:
+            messages.error(
+                request=request,
+                message='Ошибка отправки')
+    else:
+        form = ContactForm()
+
     context = {
-        'title': 'Тестовая страница',
-        'page_obj': page_objects
+        'title': 'Обратная связь',
+        'h1': 'Контактная форма',
+        'form': form,
     }
-    return render(request, 'news/test.html', context)
+    return render(request=request, template_name='news/register.html', context=context)
 
 
 class HomeNews(MyMixin, ListView):

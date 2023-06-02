@@ -1,10 +1,20 @@
+from django import forms
 from django.contrib import admin
 from .models import News, Category
-
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 # Register your models here.
 
 
+class NewsAdminForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorUploadingWidget())
+
+    class Meta:
+        model = News
+        fields = '__all__'
+
+
 class NewsAdmin(admin.ModelAdmin):
+    form = NewsAdminForm
     list_display = ('id',
                     'title',
                     'created_at',
